@@ -17,22 +17,23 @@ const fetchSpotifyToken = async (clientId, clientSecret): Promise<string> => {
 	return data.access_token; // Return the access token
 };
 
-const getRandomSearchQuery = (): { searchQuery: string; dayOfYear: number } => {
+const getRandomSearchQuery = (): { searchQuery: string; day: number } => {
 	const searchQueries = [
 		'spellcasting artist',
-		'miku',
+		'hatsune miku vocaloid',
 		'tyler, the creator artist',
-		'teto',
-		'le sserafim artist',
-		'B1A4',
+		'kasane teto vocaloid',
 		'kendrick lamar',
+		'B1A4 kpop band',
+		'le sserafim kpop band',
+		
 	];
 
 	const today = new Date();
-	const dayOfYear = Math.floor((today.getFullYear() - new Date(today.getFullYear(), 0, 0).getFullYear()) / 86400000);
+	const day = today.getUTCDay() + today.getUTCDate() + today.getUTCMonth() + today.getUTCFullYear();
 
-	const searchQuery = searchQueries[dayOfYear % searchQueries.length];
-	return { searchQuery, dayOfYear };
+	const searchQuery = searchQueries[day % searchQueries.length];
+	return { searchQuery, day };
 };
 
 const fetchRandomTrack = async (
@@ -43,6 +44,7 @@ const fetchRandomTrack = async (
 	album: string;
 	artist: string;
 	id: string;
+	day: number;
 }> => {
 	const randomQuery = getRandomSearchQuery();
 	const query = randomQuery.searchQuery;
@@ -61,7 +63,7 @@ const fetchRandomTrack = async (
 	}
 
 	const data = await response.json();
-	const track = data.tracks.items[randomQuery.dayOfYear % 50]; // Pick track based on the day of the year
+	const track = data.tracks.items[randomQuery.day % 50]; // Pick track based on the day of the year
 
 	return {
 		coverURL: track.album.images[0].url,
@@ -69,6 +71,7 @@ const fetchRandomTrack = async (
 		album: track.album.name,
 		artist: track.artists.map((artist) => artist.name).join(', '),
 		id: track.id,
+		day: randomQuery.day,
 	};
 };
 
