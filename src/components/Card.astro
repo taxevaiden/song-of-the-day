@@ -22,14 +22,16 @@
 
         <p id="artist">loading...</p>
         <p class="mb-0">
-            <small><a id="link">listen on spotify</a></small>
+            <small><a id="link">listen on spotify</a> &CenterDot; <a>copy link</a></small>
         </p>
     </div>
 </article>
 
 <script>
+    const spotifyAPI = import.meta.env.PUBLIC_SPOTIFY_API;
+
     const response = await fetch(
-        "https://spotify-api-handler.aideniscool473.workers.dev/"
+        spotifyAPI
     );
     const randomSong = await response.json();
 
