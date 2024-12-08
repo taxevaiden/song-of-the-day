@@ -1,0 +1,55 @@
+---
+interface Props {
+    coverURL: string;
+    title: string;
+    album: string;
+    artist: string;
+    id: string;
+}
+
+import Image from "astro/components/Image.astro";
+
+const single = Astro.props.title == Astro.props.album;
+---
+
+<article
+    class="text-left shadow-lg rounded-3xl p-4 overflow-hidden clearfix max-w-xl m-auto flex items-center space-x-4"
+>
+    <!-- <img
+        src={Astro.props.coverURL}
+        class="float-left size-32 rounded-lg mr-4"
+    /> -->
+    <Image
+        src={Astro.props.coverURL}
+        alt=`${Astro.props.title} - ${Astro.props.album}`
+        width="150"
+        height="150"
+        class="rounded-lg"
+    />
+    <div class="overflow-hidden">
+        <div class="overflow-x-auto scroll-smooth">
+            {
+                single ? (
+                    <h2 class="mb-2 mt-0 whitespace-nowrap inline-block">
+                        {Astro.props.title}
+                    </h2>
+                ) : (
+                    <h2 class="mb-2 mt-0 whitespace-nowrap inline-block">
+                        {Astro.props.title} - {Astro.props.album}
+                    </h2>
+                )
+            }
+        </div>
+
+        <p>{Astro.props.artist}</p>
+        <p class="mb-0"><small><a href=`https://open.spotify.com/track/${Astro.props.id}`>listen on spotify</a></small></p>
+    </div>
+</article>
+
+<style>
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
