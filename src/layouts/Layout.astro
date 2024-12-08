@@ -3,10 +3,13 @@ import "../styles/global.css";
 
 import Card from "../components/Card.astro";
 
-import { fetchSpotifyToken, fetchRandomTrack } from '../scripts/spotify-api'
+// import { fetchSpotifyToken, fetchRandomTrack } from "../scripts/spotify-api";
 
-const token = await fetchSpotifyToken();
-const randomSong = await fetchRandomTrack(token);
+// const token = await fetchSpotifyToken();
+// const randomSong = await fetchRandomTrack(token);
+
+const response = await fetch('https://spotify-api-handler.aideniscool473.workers.dev/');
+const randomSong = await response.json();
 ---
 
 <!doctype html>
@@ -24,7 +27,10 @@ const randomSong = await fetchRandomTrack(token);
         <link rel="icon" type="image/svg+xml" href="/favicon.png" />
         <meta name="generator" content={Astro.generator} />
         <title>song of the day</title>
-		<meta name="description" content="get a cool new song everyday. open source."/>
+        <meta
+            name="description"
+            content="get a cool new song everyday. open source."
+        />
     </head>
     <body>
         <main class="text-center">
@@ -35,17 +41,22 @@ const randomSong = await fetchRandomTrack(token);
                 <div
                     class="flex justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
                 >
-                    <div
-                        class="max-w-2xl h-5xl p-4"
-                    >
+                    <div class="max-w-2xl h-5xl p-4">
                         <slot />
-						<Card coverURL={randomSong.coverURL} album={randomSong.album} title={randomSong.title} artist={randomSong.artist} id={randomSong.id}></Card>
+                        <Card
+                            coverURL={randomSong.coverURL}
+                            album={randomSong.album}
+                            title={randomSong.title}
+                            artist={randomSong.artist}
+                            id={randomSong.id}
+                        />
                         <p class="mt-8 mb-2">
                             <small
                                 >&copy; 2024 <a
                                     href="https://taxevaiden.pages.dev"
                                     >taxevaiden</a
-                                ></small>
+                                ></small
+                            >
                         </p>
                     </div>
                 </div>
