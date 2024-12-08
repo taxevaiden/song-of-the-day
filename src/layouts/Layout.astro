@@ -7,6 +7,11 @@ import Card from "../components/Card.astro";
 
 // const token = await fetchSpotifyToken();
 // const randomSong = await fetchRandomTrack(token);
+
+const title = Astro.url.searchParams.get('title') || 'title';
+const album = Astro.url.searchParams.get('album') || 'title';
+const artist = Astro.url.searchParams.get('artist') || 'title';
+const coverURL = Astro.url.searchParams.get('coverURL') || '/fallback.png';
 ---
 
 <!doctype html>
@@ -23,10 +28,10 @@ import Card from "../components/Card.astro";
         <meta name="viewport" content="width=device-width" />
         <link rel="icon" type="image/svg+xml" href="/favicon.png" />
         <meta name="generator" content={Astro.generator} />
-        <title>song of the day - title</title>
-        <meta name="description" content="title - album - artist" />
+        <title>song of the day - {title}</title>
+        <meta name="description" content=`${title} - ${album} - ${artist}` />
         <meta content="#fff8ab" data-react-helmet="true" name="theme-color" />
-        <meta content="/fallback.png" property="og:image" />
+        <meta content={coverURL} property="og:image" />
     </head>
     <body>
         <main class="text-center">
@@ -79,24 +84,6 @@ import Card from "../components/Card.astro";
         url.searchParams.set('artist', artist);
         url.searchParams.set('coverURL', coverURL);
         window.history.pushState({}, '', url); 
-
-        const metaTitle = document.querySelector("title") as HTMLTitleElement;
-        const metaDescription = document.querySelector(
-            'meta[name="description"]'
-        ) as HTMLMetaElement;
-        const metaImage = document.querySelector('meta[propery="og:image"]') as HTMLMetaElement;
-
-        if (title == album) {
-            metaDescription.setAttribute("content", `${url.searchParams.get('title')} - ${url.searchParams.get('artist')}`);
-        } else {
-            metaDescription.setAttribute(
-                "content",
-                `${url.searchParams.get('title')} - ${url.searchParams.get('album')} - ${url.searchParams.get('artist')}`
-            );
-        }
-
-        metaTitle.innerText = `song of the day - ${url.searchParams.get('title')}`;
-        metaImage.setAttribute("content", url.searchParams.get('coverURL')); //a
         
     </script>
 </html>
