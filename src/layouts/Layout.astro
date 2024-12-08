@@ -26,32 +26,27 @@ const randomSong = await response.json();
         <meta name="viewport" content="width=device-width" />
         <link rel="icon" type="image/svg+xml" href="/favicon.png" />
         <meta name="generator" content={Astro.generator} />
-        <title>song of the day - {randomSong.title}</title>
+        <title>song of the day - title</title>
         <meta
             name="description"
-            content=`${randomSong.title} - ${randomSong.album} - ${randomSong.artist} - get a cool new song everyday. open source.`
+            content="title - album - artist"
         />
 		<meta content="#fff8ab" data-react-helmet="true" name="theme-color" />
-		<meta content={randomSong.coverURL} property="og:image" />
+		<meta content="/fallback.png" property="og:image" />
     </head>
     <body>
         <main class="text-center">
             <div
                 class="bg-no-repeat bg-cover bg-center w-screen h-screen"
-                style=`background-image: url(${randomSong.coverURL});`
+                style="backgroundImage: url(/fallback.png);"
+                id="background"
             >
                 <div
                     class="flex justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
                 >
                     <div class="max-w-2xl h-5xl p-4">
                         <slot />
-                        <Card
-                            coverURL={randomSong.coverURL}
-                            album={randomSong.album}
-                            title={randomSong.title}
-                            artist={randomSong.artist}
-                            id={randomSong.id}
-                        />
+                        <Card/>
                         <p class="mt-8 mb-2">
                             <small
                                 >&copy; 2024 <a
@@ -65,4 +60,31 @@ const randomSong = await response.json();
             </div>
         </main>
     </body>
+
+    <script>
+        const response = await fetch('https://spotify-api-handler.aideniscool473.workers.dev/');
+        const randomSong = await response.json();
+
+        const coverURL = randomSong.coverURL;
+        const bgElement = document.getElementById("background") as HTMLDivElement;
+        bgElement.style.backgroundImage = `url(${coverURL})`;
+
+        const metaTitle = document.querySelector('title') as HTMLTitleElement;
+        const metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+        const metaImage = document.querySelector('meta[propery="og:image"]');
+
+        const title = randomSong.title;
+        const album = randomSong.album;
+        const artist = randomSong.artist;
+
+        if (title == album) {
+            metaDescription.setAttribute("content", `${title} - ${artist}`);
+        } else {
+            metaDescription.setAttribute("content", `${title} - ${album} - ${artist}`);
+        }
+
+        metaTitle.innerText = `song of the day - ${title}`;
+        metaImage?.setAttribute("content", coverURL);
+        
+    </script>
 </html>

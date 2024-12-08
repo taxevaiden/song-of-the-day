@@ -21,11 +21,11 @@ const getRandomSearchQuery = (): { searchQuery: string; day: number } => {
 	const searchQueries = [
 		'spellcasting artist',
 		'hatsune miku vocaloid',
-		'tyler, the creator artist',
 		'kasane teto vocaloid',
 		'kendrick lamar',
 		'B1A4 kpop band',
 		'le sserafim kpop band',
+		'tyler, the creator song rap artist',
 		
 	];
 
@@ -85,7 +85,7 @@ export default {
 				const trackData = await fetchRandomTrack(token);
 
 				return new Response(JSON.stringify(trackData), {
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
 				});
 			} catch (error) {
 				return new Response(`Error: ${error.message}`, { status: 500 });
