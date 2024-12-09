@@ -1,6 +1,5 @@
 // Importing necessary environment variables
 const fetchSpotifyToken = async (clientId, clientSecret): Promise<string> => {
-
 	const authString = `${clientId}:${clientSecret}`;
 	const base64AuthString = btoa(authString);
 
@@ -20,13 +19,15 @@ const fetchSpotifyToken = async (clientId, clientSecret): Promise<string> => {
 const getRandomSearchQuery = (): { searchQuery: string; day: number } => {
 	const searchQueries = [
 		'spellcasting artist',
-		'hatsune miku vocaloid',
 		'kasane teto vocaloid',
 		'kendrick lamar',
 		'B1A4 kpop band',
 		'le sserafim kpop band',
 		'tyler, the creator song rap artist',
-		
+		'newjeans kpop band',
+		'hatsune miku vocaloid',
+		'glass beach rock band',
+		'loossemble kpop band',
 	];
 
 	const today = new Date();
@@ -49,7 +50,7 @@ const fetchRandomTrack = async (
 	const randomQuery = getRandomSearchQuery();
 	const query = randomQuery.searchQuery;
 	const type = 'track'; // Search for tracks
-	const limit = 50; // Number of results to fetch
+	const limit = 10; // Number of results to fetch
 
 	const response = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}&limit=${limit}`, {
 		headers: {
@@ -63,7 +64,7 @@ const fetchRandomTrack = async (
 	}
 
 	const data = await response.json();
-	const track = data.tracks.items[randomQuery.day % 50]; // Pick track based on the day of the year
+	const track = data.tracks.items[randomQuery.day % limit]; // Pick track based on the day of the year
 
 	return {
 		coverURL: track.album.images[0].url,
@@ -85,7 +86,11 @@ export default {
 				const trackData = await fetchRandomTrack(token);
 
 				return new Response(JSON.stringify(trackData), {
-					headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*',
+						'Cache-Control': 'no-cache, no-store, must-revalidate',
+					},
 				});
 			} catch (error) {
 				return new Response(`Error: ${error.message}`, { status: 500 });

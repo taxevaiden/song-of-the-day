@@ -8,10 +8,33 @@ import Card from "../components/Card.astro";
 // const token = await fetchSpotifyToken();
 // const randomSong = await fetchRandomTrack(token);
 
-const title = Astro.url.searchParams.get('title') || 'title';
-const album = Astro.url.searchParams.get('album') || 'title';
-const artist = Astro.url.searchParams.get('artist') || 'title';
-const coverURL = Astro.url.searchParams.get('coverURL') || '/fallback.png';
+// Fetch real-time data on every request
+const fetchSpotifyData = async () => {
+  const apiURL = import.meta.env.PUBLIC_SPOTIFY_API;
+  try {
+    const response = await fetch(apiURL, { cache: "no-store" }); // Ensure no caching
+    if (!response.ok) {
+      throw new Error("Failed to fetch Spotify data");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Default Title",
+      album: "Default Album",
+      artist: "Default Artist",
+      coverURL: "/fallback.png",
+    };
+  }
+};
+
+const { title, album, artist, coverURL } = await fetchSpotifyData();
+
+console.log(title, album, artist, coverURL);
+
+interface Props {
+    pageTitle: string;
+}
 ---
 
 <!doctype html>
@@ -37,18 +60,21 @@ const coverURL = Astro.url.searchParams.get('coverURL') || '/fallback.png';
         <main class="text-center">
             <div
                 class="bg-no-repeat bg-cover bg-center w-screen h-screen"
-                style="backgroundImage: url(/fallback.png);"
+                style=`background-image: url(${coverURL});`
                 id="background"
             >
                 <div
                     class="flex justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
                 >
-                    <div class="max-w-2xl h-5xl p-4">
+                    <div class="max-w-3xl h-5xl p-4">
+                        <h1 class="uppercase">{Astro.props.pageTitle}</h1>
                         <slot />
-                        <Card />
+                        <Card title={title} album={album} artist={artist} coverURL={coverURL}/>
                         <p class="mt-8 mb-2">
-                            <small
-                                >&copy; 2024 <a
+                            <small>
+                                <a href="/">song of the day</a> &CenterDot; <a href="/about">why??</a> &CenterDot;
+                                <a href="/how-it-works">how it works</a><br />
+                                &copy; 2024 <a
                                     href="https://taxevaiden.pages.dev"
                                     >taxevaiden</a
                                 ></small
@@ -59,31 +85,4 @@ const coverURL = Astro.url.searchParams.get('coverURL') || '/fallback.png';
             </div>
         </main>
     </body>
-
-    <script>
-        const spotifyAPI = import.meta.env.PUBLIC_SPOTIFY_API;
-
-        const response = await fetch(
-            spotifyAPI
-        );
-        const randomSong = await response.json();
-
-        const title = randomSong.title as string;
-        const album = randomSong.album as string;
-        const artist = randomSong.artist as string;
-        const coverURL = randomSong.coverURL as string;
-
-        const bgElement = document.getElementById(
-            "background"
-        ) as HTMLDivElement;
-        bgElement.style.backgroundImage = `url(${coverURL})`;
-
-        const url = new URL(window.location.href);
-        url.searchParams.set('title', title);
-        url.searchParams.set('album', album);
-        url.searchParams.set('artist', artist);
-        url.searchParams.set('coverURL', coverURL);
-        window.history.pushState({}, '', url); 
-        
-    </script>
 </html>

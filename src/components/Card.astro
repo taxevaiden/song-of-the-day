@@ -1,64 +1,53 @@
+---
+interface Props {
+    title: string;
+    album: string;
+    artist: string;
+    coverURL: string;
+}
+---
+
 <article
-    class="text-left shadow-lg rounded-3xl p-4 overflow-hidden clearfix max-w-xl m-auto flex items-center space-x-4"
+    class="text-left shadow-xl rounded-3xl p-4 overflow-hidden clearfix max-w-xl m-auto flex items-center space-x-4"
 >
     <!-- <img
         src={Astro.props.coverURL}
         class="float-left size-32 rounded-lg mr-4"
     /> -->
     <img
-        src="/fallback.png"
+        src={Astro.props.coverURL}
         alt=`loading...`
         width="150"
         height="150"
         class="rounded-lg"
-        id="cover"
     />
     <div class="overflow-hidden">
-        <div class="overflow-x-auto scroll-smooth">
-            <h2 class="mb-2 mt-0 whitespace-nowrap inline-block" id="title">
-                loading...
+        <div class="overflow-x-auto scroll-smooth [mask-image:linear-gradient(to_right,#000_80%,transparent)]">
+            <h2 class="mb-2 mt-0 whitespace-nowrap inline-block ">
+                {Astro.props.title} <span class="select-none">&ThickSpace;&ThinSpace;</span>
             </h2>
         </div>
 
-        <p id="artist">loading...</p>
+        <p>
+            <b>{Astro.props.album}</b><br />
+            {Astro.props.artist}
+        </p>
         <p class="mb-0">
-            <small><a id="link">listen on spotify</a> &CenterDot; <a>copy link</a></small>
+            <small
+                ><a>listen on spotify</a> &CenterDot; <a
+                    id="copy-link">copy link</a
+                ></small
+            >
         </p>
     </div>
 </article>
 
 <script>
-    const spotifyAPI = import.meta.env.PUBLIC_SPOTIFY_API;
-
-    const response = await fetch(
-        spotifyAPI
-    );
-    const randomSong = await response.json();
-
-    const coverURL = randomSong.coverURL;
-    const coverElement = document.getElementById("cover") as HTMLImageElement;
-    coverElement.src = coverURL;
-
-    const title = randomSong.title;
-    const album = randomSong.album;
-    const titleElement = document.getElementById("title") as HTMLHeadingElement;
-
-    if (title == album) { // it's a single
-        titleElement.innerText = `${title}`;
-    } else {
-        titleElement.innerText = `${title} - ${album}`;
+    const copyLinkElement = document.getElementById("copy-link") as HTMLLinkElement;
+    copyLinkElement.onclick = function() {
+        navigator.clipboard.writeText(window.location.href);
+        copyLinkElement.innerText = "link copied!"
     }
-    
-
-    const artist = randomSong.artist;
-    const artistElement = document.getElementById(
-        "artist"
-    ) as HTMLParagraphElement;
-    artistElement.innerText = artist;
-
-    const link = `https://open.spotify.com/track/${randomSong.id}`;
-    const linkElement = document.getElementById("link") as HTMLLinkElement;
-    linkElement.href = link;
 </script>
 
 <style>
