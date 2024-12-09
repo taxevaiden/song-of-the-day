@@ -31,7 +31,7 @@ const getRandomSearchQuery = (): { searchQuery: string; day: number } => {
 	];
 
 	const today = new Date();
-	const day = today.getUTCDay() + today.getUTCDate() + today.getUTCMonth() + today.getUTCFullYear();
+	const day = today.getUTCDay() + today.getUTCDate() + today.getUTCMonth() + today.getUTCFullYear() + 1;
 
 	const searchQuery = searchQueries[day % searchQueries.length];
 	return { searchQuery, day };

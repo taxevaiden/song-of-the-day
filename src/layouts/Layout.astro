@@ -8,24 +8,20 @@ import Card from "../components/Card.astro";
 // const token = await fetchSpotifyToken();
 // const randomSong = await fetchRandomTrack(token);
 
-// Fetch real-time data on every request
 const fetchSpotifyData = async () => {
-  const apiURL = import.meta.env.PUBLIC_SPOTIFY_API;
-  try {
-    const response = await fetch(apiURL, { cache: "no-store" }); // Ensure no caching
-    if (!response.ok) {
-      throw new Error("Failed to fetch Spotify data");
+    const apiURL = import.meta.env.PUBLIC_SPOTIFY_API;
+    try {
+        const response = await fetch(apiURL, { cache: "no-store" });
+        if (!response.ok) throw new Error("Failed to fetch Spotify data");
+        return await response.json();
+    } catch {
+        return {
+            title: "Default Title",
+            album: "Default Album",
+            artist: "Default Artist",
+            coverURL: "/fallback.png",
+        };
     }
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return {
-      title: "Default Title",
-      album: "Default Album",
-      artist: "Default Artist",
-      coverURL: "/fallback.png",
-    };
-  }
 };
 
 const { title, album, artist, coverURL } = await fetchSpotifyData();
@@ -49,12 +45,18 @@ interface Props {
 
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.png" />
         <meta name="generator" content={Astro.generator} />
+
+        <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+
         <title>song of the day - {title}</title>
         <meta name="description" content=`${title} - ${album} - ${artist}` />
+
         <meta content="#fff8ab" data-react-helmet="true" name="theme-color" />
-        <meta content={coverURL} property="og:image" />
+        <meta property="og:title" content=`song of the day - ${title}` />
+        <meta property="og:description" content={`${title} - ${album} - ${artist} :: get cool new songs everyday.`} />
+        <meta property="og:image" content={coverURL} />
+        <meta property="og:type" content="music.song" />
     </head>
     <body>
         <main class="text-center">
@@ -69,10 +71,17 @@ interface Props {
                     <div class="max-w-3xl h-5xl p-4">
                         <h1 class="uppercase">{Astro.props.pageTitle}</h1>
                         <slot />
-                        <Card title={title} album={album} artist={artist} coverURL={coverURL}/>
+                        <Card
+                            title={title}
+                            album={album}
+                            artist={artist}
+                            coverURL={coverURL}
+                        />
                         <p class="mt-8 mb-2">
                             <small>
-                                <a href="/">song of the day</a> &CenterDot; <a href="/about">why??</a> &CenterDot;
+                                <a href="/">song of the day</a> &CenterDot; <a
+                                    href="/about">why??</a
+                                > &CenterDot;
                                 <a href="/how-it-works">how it works</a><br />
                                 &copy; 2024 <a
                                     href="https://taxevaiden.pages.dev"
