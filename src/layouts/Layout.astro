@@ -21,12 +21,13 @@ const fetchSpotifyData = async () => {
             title: "Default Title",
             album: "Default Album",
             artist: "Default Artist",
+            id: "4cOdK2wGLETKBW3PvgPWqT",
             coverURL: "/fallback.png",
         };
     }
 };
 
-const { title, album, artist, coverURL } = await fetchSpotifyData();
+const { title, album, artist, id, coverURL } = await fetchSpotifyData();
 
 console.log(title, album, artist, coverURL);
 
@@ -77,6 +78,7 @@ interface Props {
                             title={title}
                             album={album}
                             artist={artist}
+                            id={id}
                             coverURL={coverURL}
                         />
                         <p class="mt-8 mb-2">
