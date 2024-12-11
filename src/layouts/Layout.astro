@@ -3,17 +3,40 @@ import "../styles/global.css";
 
 import Card from "../components/Card.astro";
 
+import { ClientRouter } from "astro:transitions";
+
 // import { fetchSpotifyToken, fetchRandomTrack } from "../scripts/spotify-api";
 
 // const token = await fetchSpotifyToken();
 // const randomSong = await fetchRandomTrack(token);
 
+// In-memory cache for Spotify data
+const cache: { data: any; expiry: number | null } = {
+    data: null,
+    expiry: null,
+};
+
+// Fetch Spotify data with caching
 const fetchSpotifyData = async () => {
     const apiURL = import.meta.env.PUBLIC_SPOTIFY_API;
+
+    // Check if the cache is valid
+    const now = Date.now();
+    if (cache.data && cache.expiry && now < cache.expiry) {
+        return cache.data;
+    }
+
     try {
         const response = await fetch(apiURL, { cache: "no-store" });
         if (!response.ok) throw new Error("Failed to fetch Spotify data");
-        return await response.json();
+
+        const data = await response.json();
+
+        // Cache the data for 1 hour (3600000 ms)
+        cache.data = data;
+        cache.expiry = now + 3600000;
+
+        return data;
     } catch {
         return {
             title: "Default Title",
@@ -25,9 +48,8 @@ const fetchSpotifyData = async () => {
     }
 };
 
+// Fetch data during SSR
 const { title, album, artist, id, coverURL } = await fetchSpotifyData();
-
-console.log(title, album, artist, coverURL);
 
 interface Props {
     pageTitle: string;
@@ -55,9 +77,14 @@ interface Props {
 
         <meta content="#fff8ab" data-react-helmet="true" name="theme-color" />
         <meta property="og:title" content=`song of the day - ${title}` />
-        <meta property="og:description" content={`${title} - ${album} - ${artist} :: get cool new songs everyday.`} />
+        <meta
+            property="og:description"
+            content={`${title} - ${album} - ${artist} :: get cool new songs everyday.`}
+        />
         <meta property="og:image" content={coverURL} />
         <meta property="og:type" content="music.song" />
+
+        <ClientRouter />
     </head>
     <body>
         <main class="text-center">
@@ -69,8 +96,10 @@ interface Props {
                 <div
                     class="flex justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
                 >
-                    <div class="max-w-3xl h-5xl p-4">
-                        <h1 class="uppercase">{Astro.props.pageTitle}</h1>
+                    <div class="basis-[48rem] h-5xl p-4">
+                        <h1 class="uppercase" transition:name="pageTitle">
+                            {Astro.props.pageTitle}
+                        </h1>
                         <slot />
                         <Card
                             title={title}
@@ -79,7 +108,7 @@ interface Props {
                             id={id}
                             coverURL={coverURL}
                         />
-                        <p class="mt-8 mb-2">
+                        <p class="mt-8 mb-2" transition:name="navigate">
                             <small>
                                 <a href="/">song of the day</a> &CenterDot; <a
                                     href="/about">why??</a
