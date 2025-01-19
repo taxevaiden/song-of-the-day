@@ -94,13 +94,19 @@ interface Props {
                 id="background"
             >
                 <div
-                    class="flex justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
+                    class="flex flex-col justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
                 >
-                    <div class="basis-[48rem] h-5xl p-4">
-                        <h1 class="uppercase" transition:name="pageTitle">
-                            {Astro.props.pageTitle}
-                        </h1>
-                        <slot />
+                    <h1
+                        class="uppercase text-9xl mb-16"
+                        transition:name="pageTitle"
+                    >
+                        {Astro.props.pageTitle}
+                    </h1>
+                    <div class="p-4">
+                        <div class="max-w-[48rem]">
+                            <slot />
+                        </div>
+
                         <Card
                             title={title}
                             album={album}
@@ -108,13 +114,13 @@ interface Props {
                             id={id}
                             coverURL={coverURL}
                         />
-                        <p class="mt-8 mb-2" transition:name="navigate">
+                        <p class="mt-8 mb-48" transition:name="navigate">
                             <small>
                                 <a href="/">song of the day</a> &CenterDot; <a
                                     href="/about">why??</a
                                 > &CenterDot;
                                 <a href="/how-it-works">how it works</a><br />
-                                &copy; 2024 <a
+                                &copy; 2025 <a
                                     href="https://taxevaiden.pages.dev"
                                     >taxevaiden</a
                                 ></small

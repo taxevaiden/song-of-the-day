@@ -26,26 +26,27 @@ const fetchCachedData = async (env: Env, cacheKey: string, timeoutMs: number) =>
 };
 
 // Importing necessary environment variables
-const fetchSpotifyToken = async (clientId : string, clientSecret : string): Promise<string> => {
-	const authString = `${clientId}:${clientSecret}`;
-	const base64AuthString = btoa(authString);
+const fetchSpotifyToken = async (clientId: string, clientSecret: string): Promise<string> => {
+	const authString = `&client_id=${clientId}&client_secret=${clientSecret}`;
+	// const base64AuthString = btoa(authString);
 
 	const response = await fetch('https://accounts.spotify.com/api/token', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
-			Authorization: `Basic ${base64AuthString}`,
+			// Authorization: `Basic ${base64AuthString}`,
 		},
-		body: 'grant_type=client_credentials',
+		body: `grant_type=client_credentials${authString}`,
 	});
 
 	const data = await response.json();
+	console.log(data);
 	return data.access_token; // Return the access token
 };
 
 const getToday = (): { day: number } => {
 	const today = new Date();
-	const day = today.getUTCDay() + today.getUTCDate() + today.getUTCMonth() + today.getUTCFullYear() * 365;
+	const day = today.getUTCDay() + today.getUTCDate() + today.getUTCMonth() + (today.getUTCFullYear() - 1000) * 365;
 
 	return { day };
 };
@@ -87,21 +88,25 @@ const fetchRandomTrack = async (
 	day: number;
 }> => {
 	const day = getToday().day;
+	console.log(day);
 	const cacheKey = `spotify-track-${day}`;
-	const latestKey = await withTimeout(env.SPOTIFY_API_HANDLER_CACHE.get("latest-key"), 5000);
+	const latestKey = await withTimeout(env.SPOTIFY_API_HANDLER_CACHE.get('latest-key'), 5000);
 	const latestKeyString: string = latestKey as string;
-	const cachedData = await fetchCachedData(env, latestKeyString, 5000) as SpotifyTrack;
+	const cachedData = (await fetchCachedData(env, latestKeyString, 5000)) as SpotifyTrack;
+	console.log(cachedData);
 
-	if (cachedData.day == day) {
-		// Return the cached data
-		return {
-			coverURL: cachedData.coverURL,
-			title: cachedData.title,
-			album: cachedData.album,
-			artist: cachedData.artist,
-			id: cachedData.id,
-			day: cachedData.day,
-		};
+	if (cachedData) {
+		if (cachedData.day == day) {
+			// Return the cached data
+			return {
+				coverURL: cachedData.coverURL,
+				title: cachedData.title,
+				album: cachedData.album,
+				artist: cachedData.artist,
+				id: cachedData.id,
+				day: cachedData.day,
+			};
+		}
 	}
 
 	// Fetch a new track if no cache is available
@@ -147,7 +152,7 @@ const fetchRandomTrack = async (
 		expirationTtl: 172800, // Expire after 2 days
 	});
 
-	await env.SPOTIFY_API_HANDLER_CACHE.put("latest-key", cacheKey);
+	await env.SPOTIFY_API_HANDLER_CACHE.put('latest-key', cacheKey);
 
 	// Return the new track details
 	return trackFormatted;
@@ -155,11 +160,12 @@ const fetchRandomTrack = async (
 
 // Handling incoming requests
 export default {
-	async fetch(request, env : Env) {
+	async fetch(request, env: Env) {
 		// Only support GET requests for simplicity
 		if (request.method === 'GET') {
 			try {
 				const token = await fetchSpotifyToken(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
+				console.log(token);
 				const trackData = await fetchRandomTrack(token, env);
 
 				return new Response(JSON.stringify(trackData), {

@@ -9,7 +9,7 @@ interface Props {
 ---
 
 <article
-    class="text-left shadow-xl rounded-3xl p-4 overflow-hidden clearfix max-w-xl m-auto flex items-center space-x-4"
+    class="text-left shadow-2xl rounded-3xl p-4 overflow-hidden clearfix w-[48rem] m-auto flex items-center space-x-4"
     transition:name="card"
 >
     <!-- <img
@@ -21,10 +21,10 @@ interface Props {
         alt=`loading...`
         width="150"
         height="150"
-        class="rounded-lg"
+        class="rounded-lg shadow-xl"
     />
     <div class="overflow-hidden">
-        <div class="overflow-x-auto scroll-smooth [mask-image:linear-gradient(to_right,#000_80%,transparent)]">
+        <div class="overflow-x-auto scroll-smooth w-[35rem] [mask-image:linear-gradient(to_right,#000_80%,transparent)]">
             <h2 class="mb-2 mt-0 whitespace-nowrap inline-block ">
                 {Astro.props.title} <span class="select-none">&ThickSpace;&ThinSpace;</span>
             </h2>
