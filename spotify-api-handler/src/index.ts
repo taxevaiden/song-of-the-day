@@ -7,6 +7,15 @@ interface SpotifyTrack {
 	day: number;
 }
 
+function shuffleArray(array : Array<string>) {
+	let clone = structuredClone(array)
+    for (let i = clone.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+    }
+	return clone;
+}
+
 // Utility function to apply timeout to any promise
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 	return Promise.race([
@@ -54,25 +63,22 @@ const getToday = (): { day: number } => {
 const getRandomSearchQuery = (): { searchQuery: string } => {
 	const searchQueries = [
 		'spellcasting artist',
-		'kasane teto vocaloid',
+		'vocaloid',
+		'iyowa vocaloid',
+		'sasakure.UK',
+		'DECO*27',
 		'kendrick lamar',
 		'B1A4 kpop band',
 		'le sserafim kpop band',
 		'tyler, the creator song rap artist',
-		'tyler, the creator song rap artist chromakopia',
-		'tyler, the creator song rap artist call me if you get lost',
-		'tyler, the creator song rap artist igor',
-		'tyler, the creator song rap artist flower boy',
-		'tyler, the creator song rap artist cherry bomb',
-		'tyler, the creator song rap artist wolf',
-		'tyler, the creator song rap artist goblin',
 		'newjeans kpop band',
-		'hatsune miku vocaloid',
 		'glass beach rock band',
 		'loossemble kpop band',
 	];
 
-	const searchQuery = searchQueries[getToday().day % searchQueries.length];
+	const shuffled = shuffleArray(searchQueries);
+
+	const searchQuery = shuffled[getToday().day % searchQueries.length];
 	return { searchQuery };
 };
 

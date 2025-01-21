@@ -24,19 +24,33 @@ export default {
                 ],
             },
 
-            animation: {
-                scrollTitle: "scrollTitle 7.5s linear infinite", // Custom animation
-            },
             keyframes: {
-                scrollTitle: {
-                    "0%": { transform: "translateX(0%)" },
-                    "25%": { transform: "translateX(-50%)" },
-					"50%": { transform: "translateX(-50%)" },
-					"75%": { transform: "translateX(0%)" },
-					"100%": { transform: "translateX(0%)" },
+                scroll: {
+                    "0%": { transform: "translateX(-100%)" },
+                    "100%": { transform: "translateX(100%)" },
                 },
+            },
+
+            animation: {
+                scroll: "scroll 10s linear infinite",
+            },
+
+            animationDelay: {
+                'halfway': '-5s',
             },
         },
     },
-    plugins: [],
+    plugins: [
+        function ({ addUtilities, theme }) {
+            const delays = theme("animationDelay");
+            const utilities = Object.entries(delays).reduce(
+                (acc, [key, value]) => {
+                    acc[`.animation-delay-${key}`] = { animationDelay: value };
+                    return acc;
+                },
+                {}
+            );
+            addUtilities(utilities, ["responsive", "hover"]);
+        },
+    ],
 };

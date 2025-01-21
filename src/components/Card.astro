@@ -9,7 +9,7 @@ interface Props {
 ---
 
 <article
-    class="text-left shadow-2xl rounded-3xl p-4 overflow-hidden clearfix w-[48rem] m-auto flex items-center space-x-4"
+    class="text-left shadow-2xl rounded-3xl overflow-hidden clearfix max-w-[50rem] m-auto flex items-center"
     transition:name="card"
 >
     <!-- <img
@@ -21,20 +21,20 @@ interface Props {
         alt=`loading...`
         width="150"
         height="150"
-        class="rounded-lg shadow-xl"
+        class="rounded-lg shadow-xl ml-4 my-4"
     />
     <div class="overflow-hidden">
-        <div class="overflow-x-auto scroll-smooth w-[35rem] [mask-image:linear-gradient(to_right,#000_80%,transparent)]">
-            <h2 class="mb-2 mt-0 whitespace-nowrap inline-block ">
-                {Astro.props.title} <span class="select-none">&ThickSpace;&ThinSpace;</span>
+        <div class="overflow-hidden max-w-[38rem] [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_90%,transparent)]">
+            <h2 class="pl-4 mb-2 mt-0 whitespace-nowrap inline-block animate-scroll animation-delay-halfway">
+                {Astro.props.title} <span class="select-none">&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;</span>
             </h2>
         </div>
 
-        <p>
+        <p class="pl-4">
             <b>{Astro.props.album}</b><br />
             {Astro.props.artist}
         </p>
-        <p class="mb-0">
+        <p class="pl-4 mb-0">
             <small
                 ><a href=`https://open.spotify.com/track/${Astro.props.id}`>listen on spotify</a> &CenterDot; <a
                     id="copy-link">copy link</a
