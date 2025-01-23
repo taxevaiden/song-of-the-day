@@ -3,41 +3,46 @@
 @tailwind utilities;
 
 @layer base {
-    h1,h2,h3,h4,h5,h6,p {
-        @apply font-sans text-text
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        @apply font-sans text-text;
     }
-    
-    
 
     h1 {
-        @apply font-bold text-6xl m-7
+        @apply font-bold text-6xl m-7;
     }
 
     h2 {
-        @apply font-bold text-4xl mt-4 mb-7
+        @apply font-bold text-4xl mt-4 mb-7;
     }
 
     p {
-        @apply text-base mb-4
+        @apply text-base mb-4;
     }
 
     small {
-        @apply text-text-secondary
+        @apply text-text-secondary;
     }
 
     a {
-        @apply underline transition-all
+        @apply underline transition-all;
     }
 
     a:hover {
-        @apply font-bold transition-all
+        @apply font-bold transition-all;
     }
 
-    html, body {
-        @apply m-0 h-full
+    html,
+    body {
+        @apply m-0 h-full;
     }
 
     html {
-        @apply w-full bg-blue-100
+        @apply w-full bg-blue-100;
     }
 }

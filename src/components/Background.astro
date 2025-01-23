@@ -1,0 +1,15 @@
+---
+
+interface Props {
+    coverURL: string;
+}
+
+---
+
+<div
+    class="bg-no-repeat bg-cover bg-center fixed w-screen h-screen"
+    style=`background-image: url(${Astro.props.coverURL});`
+    id="background"
+>
+</div>
+<div class="backdrop-blur-[128px] bg-primary w-screen h-screen fixed"></div>

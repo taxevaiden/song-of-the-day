@@ -22,11 +22,25 @@ export default {
                     "inset 0px -4px 8px -2px rgba(0,0,0,0.05)",
                     "0 25px 50px -12px rgb(0 0 0 / 0.5)",
                 ],
+                outline: [
+                    "inset 0px 0px 16px rgba(255,255,255,0.06125)"
+                ],
+                outlinexl: [
+                    "inset 0px 0px 16px rgba(255,255,255,0.025)",
+                    "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+                    "0 8px 10px -6px rgba(0, 0, 0, 0.1)"
+                ],
+                outline2xl: [
+                    "inset 0px 0px 16px rgba(255,255,255,0.025)",
+                    "0 25px 50px -12px rgb(0, 0, 0, 0.25)"
+                ]
             },
 
             keyframes: {
                 scroll: {
                     "0%": { transform: "translateX(-100%)" },
+                    "25%": { transform: "translateX(0%)" },
+                    "75%": { transform: "translateX(0%)" },
                     "100%": { transform: "translateX(100%)" },
                 },
             },

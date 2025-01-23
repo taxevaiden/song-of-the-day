@@ -3,6 +3,7 @@ interface SpotifyTrack {
 	title: string;
 	album: string;
 	artist: string;
+	explicit: boolean;
 	id: string;
 	day: number;
 }
@@ -16,7 +17,7 @@ function shuffleArray(array : Array<string>) {
 	return clone;
 }
 
-// Utility function to apply timeout to any promise
+// utility function to apply timeout to any promise
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 	return Promise.race([
 		promise,
@@ -30,11 +31,11 @@ const fetchCachedData = async (env: Env, cacheKey: string, timeoutMs: number) =>
 		return cachedData;
 	} catch (error) {
 		console.error('Error retrieving cache:', error);
-		return null; // Or handle differently as needed
+		return null;
 	}
 };
 
-// Importing necessary environment variables
+// importing necessary environment variables
 const fetchSpotifyToken = async (clientId: string, clientSecret: string): Promise<string> => {
 	const authString = `&client_id=${clientId}&client_secret=${clientSecret}`;
 	// const base64AuthString = btoa(authString);
@@ -50,7 +51,7 @@ const fetchSpotifyToken = async (clientId: string, clientSecret: string): Promis
 
 	const data = await response.json();
 	console.log(data);
-	return data.access_token; // Return the access token
+	return data.access_token; // return the access token
 };
 
 const getToday = (): { day: number } => {
@@ -90,6 +91,7 @@ const fetchRandomTrack = async (
 	title: string;
 	album: string;
 	artist: string;
+	explicit: boolean;
 	id: string;
 	day: number;
 }> => {
@@ -103,19 +105,20 @@ const fetchRandomTrack = async (
 
 	if (cachedData) {
 		if (cachedData.day == day) {
-			// Return the cached data
+			// return the cached data
 			return {
 				coverURL: cachedData.coverURL,
 				title: cachedData.title,
 				album: cachedData.album,
 				artist: cachedData.artist,
+				explicit: cachedData.explicit,
 				id: cachedData.id,
 				day: cachedData.day,
 			};
 		}
 	}
 
-	// Fetch a new track if no cache is available
+	// fetch a new track if no cache is available
 	const randomQuery = getRandomSearchQuery();
 	const query = randomQuery.searchQuery;
 	const type = 'track';
@@ -134,7 +137,7 @@ const fetchRandomTrack = async (
 
 	const data = await response.json();
 
-	// Validate the response and assign a track
+	// validate the response and assign a track
 	if (!data.tracks || !data.tracks.items || data.tracks.items.length === 0) {
 		throw new Error('No tracks found in the Spotify response');
 	}
@@ -145,6 +148,7 @@ const fetchRandomTrack = async (
 		title: track.name,
 		album: track.album.name,
 		artist: track.artists.map((artist) => artist.name).join(', '),
+		explicit: track.explicit,
 		id: track.id,
 		day: day,
 	};
@@ -153,18 +157,18 @@ const fetchRandomTrack = async (
 		throw new Error('Failed to select a valid track from the response');
 	}
 
-	// Cache the new track data
+	// cache the new track data
 	await env.SPOTIFY_API_HANDLER_CACHE.put(cacheKey, JSON.stringify(trackFormatted), {
 		expirationTtl: 172800, // Expire after 2 days
 	});
 
 	await env.SPOTIFY_API_HANDLER_CACHE.put('latest-key', cacheKey);
 
-	// Return the new track details
+	// return the new track details
 	return trackFormatted;
 };
 
-// Handling incoming requests
+// handling incoming requests
 export default {
 	async fetch(request, env: Env) {
 		// Only support GET requests for simplicity

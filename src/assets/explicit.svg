@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="1.75rem" viewBox="0 0 960 960" width="1.75rem" fill="#ffffff">
+    <mask id="mask">
+        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="640"
+            font-family="Inter" font-weight="900">E</text>
+    </mask>
+    <rect width="960" height="960" rx="240" mask="url(#mask)"/>
+
+
+</svg>

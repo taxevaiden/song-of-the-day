@@ -2,6 +2,7 @@
 import "../styles/global.css";
 
 import Card from "../components/Card.astro";
+import Background from "../components/Background.astro";
 
 import { ClientRouter } from "astro:transitions";
 
@@ -10,17 +11,17 @@ import { ClientRouter } from "astro:transitions";
 // const token = await fetchSpotifyToken();
 // const randomSong = await fetchRandomTrack(token);
 
-// In-memory cache for Spotify data
+// in-memory cache for Spotify data
 const cache: { data: any; expiry: number | null } = {
     data: null,
     expiry: null,
 };
 
-// Fetch Spotify data with caching
+// fetch Spotify data with caching
 const fetchSpotifyData = async () => {
     const apiURL = import.meta.env.PUBLIC_SPOTIFY_API;
 
-    // Check if the cache is valid
+    // check if the cache is valid
     const now = Date.now();
     if (cache.data && cache.expiry && now < cache.expiry) {
         return cache.data;
@@ -32,16 +33,17 @@ const fetchSpotifyData = async () => {
 
         const data = await response.json();
 
-        // Cache the data for 1 hour (3600000 ms)
+        // cahce the data for 1 hour (3600000 ms)
         cache.data = data;
         cache.expiry = now + 3600000;
 
         return data;
     } catch {
         return {
-            title: "Default Title",
-            album: "Default Album",
-            artist: "Default Artist",
+            title: "default title",
+            album: "default album",
+            artist: "default artist",
+            explicit: false,
             id: "4cOdK2wGLETKBW3PvgPWqT",
             coverURL: "/fallback.png",
         };
@@ -49,7 +51,7 @@ const fetchSpotifyData = async () => {
 };
 
 // Fetch data during SSR
-const { title, album, artist, id, coverURL } = await fetchSpotifyData();
+const { title, album, artist, explicit, id, coverURL } = await fetchSpotifyData();
 
 interface Props {
     pageTitle: string;
@@ -79,7 +81,7 @@ interface Props {
         <meta property="og:title" content=`song of the day - ${title}` />
         <meta
             property="og:description"
-            content={`${title} - ${album} - ${artist} :: get cool new songs everyday.`}
+            content={`${title} - ${album} by ${artist} :: get cool new songs everyday.`}
         />
         <meta property="og:image" content={coverURL} />
         <meta property="og:type" content="music.song" />
@@ -88,45 +90,40 @@ interface Props {
     </head>
     <body>
         <main class="text-center">
+            <Background coverURL={coverURL} />
             <div
-                class="bg-no-repeat bg-cover bg-center w-screen h-screen"
-                style=`background-image: url(${coverURL});`
-                id="background"
+                class="p-4 flex flex-col justify-center items-center w-screen h-screen relative"
             >
-                <div
-                    class="flex flex-col justify-center items-center backdrop-blur-[128px] h-screen bg-primary"
+                <h1
+                    class="uppercase sm:text-9xl text-8xl mb-16 w-screen"
+                    transition:name="pageTitle"
                 >
-                    <h1
-                        class="uppercase text-9xl mb-16"
-                        transition:name="pageTitle"
-                    >
-                        {Astro.props.pageTitle}
-                    </h1>
-                    <div class="p-4">
-                        <div class="max-w-[48rem]">
-                            <slot />
-                        </div>
+                    {Astro.props.pageTitle}
+                </h1>
 
-                        <Card
-                            title={title}
-                            album={album}
-                            artist={artist}
-                            id={id}
-                            coverURL={coverURL}
-                        />
-                        <p class="mt-8 mb-4" transition:name="navigate">
-                            <small>
-                                <a href="/">song of the day</a> &CenterDot; <a
-                                    href="/about">why??</a
-                                > &CenterDot;
-                                <a href="/how-it-works">how it works</a><br />
-                                &copy; 2025 <a
-                                    href="https://taxevaiden.pages.dev"
-                                    >taxevaiden</a
-                                ></small
-                            >
-                        </p>
-                    </div>
+                <div class="p-4 w-[36rem] max-w-full min-w-0">
+                    <slot />
+
+                    <Card
+                        title={title}
+                        album={album}
+                        artist={artist}
+                        explciit={explicit}
+                        id={id}
+                        coverURL={coverURL}
+                    />
+
+                    <p class="mt-8 mb-4" transition:name="navigate">
+                        <small>
+                            <a href="/">song of the day</a> &CenterDot; <a
+                                href="/about">why??</a
+                            > &CenterDot;
+                            <a href="/how-it-works">how it works</a><br />
+                            &copy; 2025 <a href="https://taxevaiden.pages.dev"
+                                >taxevaiden</a
+                            ></small
+                        >
+                    </p>
                 </div>
             </div>
         </main>
