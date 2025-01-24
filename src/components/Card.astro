@@ -13,7 +13,8 @@ import Image from "astro/components/Image.astro";
 import spotifyIcon from "../assets/spotify_icon.svg";
 import spotifyLogo from "../assets/spotify_logo.svg";
 import copyIcon from "../assets/copy.svg";
-import ExplicitIcon from "../components/ExplicitIcon.astro";
+
+import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
 ---
 
 <article
@@ -26,9 +27,9 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
     /> -->
     <div class="flex items-center">
         <Image
-            src={Astro.props.   coverURL}
+            src={Astro.props.coverURL}
             alt="loading..."
-            class="rounded-lg shadow-xl ml-4 my-4 w-32"
+            class="rounded-lg shadow-xl ml-4 my-4 sm:w-32 w-20"
             loading="eager"
             width={128}
             height={128}
@@ -38,9 +39,11 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
                 class="overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_90%,transparent)]"
             >
                 <div
-                    class="flex flex-row items-center gap-2 pl-4 mb-2 mt-0 animate-scroll animation-delay-halfway w-[34rem] h-10 max-w-full min-w-0"
+                    class="flex flex-row items-center gap-2 pl-4 sm:mb-2 mb-0 mt-1 animate-scroll animation-delay-halfway w-[34rem] max-w-full min-w-0"
                 >
-                    <h2 class="whitespace-nowrap leading-3 m-0">
+                    <h2
+                        class="whitespace-nowrap m-0 sm:text-3xl leading-0 text-base"
+                    >
                         {Astro.props.title}
                     </h2>
 
@@ -48,30 +51,34 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
                 </div>
             </div>
 
-            <p class="pl-4">
-                <b>{Astro.props.album}</b><br />
-                {Astro.props.artist}
-            </p>
+            <div class="flex sm:flex-col flex-row sm:gap-0 gap-2 animate-scroll animation-delay-halfway w-[34rem] max-w-full min-w-0">
+                <p class="pl-4 mb-0">
+                    <b>{Astro.props.album}</b>
+                </p>
+                <p class="sm:pl-4 pl-0">
+                    {Astro.props.artist}
+                </p>
+            </div>
         </div>
     </div>
 
-    <div class="px-4 pb-4 flex flex-row gap-4">
+    <div class="px-4 pb-4 flex sm:flex-row flex-col sm:gap-4 gap-2">
         <a
             class="flex-1 no-underline duration-500"
             href=`https://open.spotify.com/track/${Astro.props.id}`
         >
             <button
-                class="w-full p-4 rounded-lg shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 h-16 text-white flex flex-row items-center justify-center gap-3"
+                class="w-full p-4 rounded-lg shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 sm:h-16 h-10 text-white flex flex-row items-center justify-center gap-3"
             >
-                <img src={spotifyIcon.src} class="h-7" alt="Spotify icon" />
+                <img src={spotifyIcon.src} class="sm:h-7 h-5" alt="Spotify icon" />
                 <p class="mb-0">listen on spotify</p>
             </button>
         </a>
         <a class="flex-1 no-underline duration-500" id="copy-link">
             <button
-                class="w-full p-4 rounded-lg flex-1 shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 h-16 text-white flex flex-row items-center justify-center gap-3"
+                class="w-full p-4 rounded-lg flex-1 shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 sm:h-16 h-10 text-white flex flex-row items-center justify-center gap-3"
             >
-                <img src={copyIcon.src} class="h-7" alt="Copy icon" />
+                <img src={copyIcon.src} class="sm:h-7 h-5" alt="Copy icon" />
                 <p class="mb-0" id="copy-text">copy link</p>
             </button>
         </a>

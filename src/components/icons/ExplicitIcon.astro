@@ -1,9 +1,7 @@
 <svg
-    class="mb-[0.06125rem]"
+    class="mb-[0.06125rem] sm:h-[28px] h-[15px] w-auto overflow-hidden"
     xmlns="http://www.w3.org/2000/svg"
-    height="28px"
     viewBox="0 0 960 960"
-    width="28px"
     fill="white"
 >
     <defs>
@@ -11,6 +9,10 @@
             id="mask"
             maskUnits="userSpaceOnUse"
             maskContentUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="960"
+            height="960"
         >
             <rect width="100%" height="100%" fill="white"></rect>
             <path
@@ -20,7 +22,6 @@
     </defs>
 
     <path
-        mask="url(#mask)"
         d="M0,240q0,-240,240,-240L720,0q240,0,240,240L960,720q0,240,-240,240L240,960q-240,0,-240,-240"
-    ></path>
+        style="mask: url(#mask); -webkit-mask: url(#mask);"></path>
 </svg>

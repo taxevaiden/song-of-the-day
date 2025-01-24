@@ -69,7 +69,7 @@ interface Props {
         />
 
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content={Astro.generator} />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.png" />
@@ -92,10 +92,10 @@ interface Props {
         <main class="text-center">
             <Background coverURL={coverURL} />
             <div
-                class="p-4 flex flex-col justify-center items-center w-screen h-screen relative"
+                class="p-4 flex flex-col justify-center items-center w-screen min-h-screen relative"
             >
                 <h1
-                    class="uppercase sm:text-9xl text-8xl mb-16 w-screen"
+                    class="uppercase sm:text-9xl text-7xl mb-16 w-screen px-8"
                     transition:name="pageTitle"
                 >
                     {Astro.props.pageTitle}
