@@ -11,7 +11,7 @@ interface Props {
 import spotifyIcon from "../assets/spotify_icon.svg";
 import spotifyLogo from "../assets/spotify_logo.svg";
 import copyIcon from "../assets/copy.svg";
-import explicitIcon from "../assets/explicit.svg";
+import ExplicitIcon from "../components/ExplicitIcon.astro";
 ---
 
 <article
@@ -39,7 +39,10 @@ import explicitIcon from "../assets/explicit.svg";
                         {Astro.props.title}
                     </h2>
 
-                    <img src={explicitIcon.src} alt="Explicit icon" class="mb-[0.06125rem]">
+                    { Astro.props.explciit ? (
+                        <ExplicitIcon />
+                    ) : null}
+                    
                 </div>
             </div>
 
