@@ -8,6 +8,8 @@ interface Props {
     coverURL: string;
 }
 
+import Image from "astro/components/Image.astro";
+
 import spotifyIcon from "../assets/spotify_icon.svg";
 import spotifyLogo from "../assets/spotify_logo.svg";
 import copyIcon from "../assets/copy.svg";
@@ -23,10 +25,13 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
         class="float-left size-32 rounded-lg mr-4"
     /> -->
     <div class="flex items-center">
-        <img
-            src={Astro.props.coverURL}
-            alt=`loading...`
+        <Image
+            src={Astro.props.   coverURL}
+            alt="loading..."
             class="rounded-lg shadow-xl ml-4 my-4 w-32"
+            loading="eager"
+            width={128}
+            height={128}
         />
         <div class="overflow-hidden mt-2">
             <div
@@ -39,10 +44,7 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
                         {Astro.props.title}
                     </h2>
 
-                    { Astro.props.explciit ? (
-                        <ExplicitIcon />
-                    ) : null}
-                    
+                    {Astro.props.explciit ? <ExplicitIcon /> : null}
                 </div>
             </div>
 
@@ -69,18 +71,20 @@ import ExplicitIcon from "../components/ExplicitIcon.astro";
             <button
                 class="w-full p-4 rounded-lg flex-1 shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 h-16 text-white flex flex-row items-center justify-center gap-3"
             >
-                <img src={copyIcon.src} class="h-7" alt="Copy icon"/>
+                <img src={copyIcon.src} class="h-7" alt="Copy icon" />
                 <p class="mb-0" id="copy-text">copy link</p>
             </button>
         </a>
     </div>
 </article>
 
-<div class="flex flex-row justify-center items-center gap-2 mt-4" transition:name="card-acknowledgment ">
+<div
+    class="flex flex-row justify-center items-center gap-2 mt-4"
+    transition:name="card-acknowledgment "
+>
     <p class="mt-4 text-sm">music data provided by</p>
     <img src={spotifyLogo.src} class="h-6" alt="Spotify icon" />
 </div>
-
 
 <script>
     const copyLinkElement = document.getElementById(
