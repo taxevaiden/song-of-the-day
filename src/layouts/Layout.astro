@@ -56,6 +56,9 @@ const { title, album, artist, explicit, id, coverURL } = await fetchSpotifyData(
 interface Props {
     pageTitle: string;
 }
+
+const bannerPath = `/banner?title=${encodeURIComponent(title)}&album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}&explicit=${encodeURIComponent(explicit)}&coverURL=${encodeURIComponent(coverURL)}`;
+console.log(bannerPath);
 ---
 
 <!doctype html>
@@ -83,7 +86,7 @@ interface Props {
             property="og:description"
             content={`${title} - ${album} by ${artist} :: get cool new songs everyday.`}
         />
-        <meta property="og:image" content={coverURL} />
+        <meta property="og:image" content={bannerPath} />
         <meta property="og:type" content="music.song" />
 
         <ClientRouter />
