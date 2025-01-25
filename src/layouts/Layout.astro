@@ -6,6 +6,13 @@ import Background from "../components/Background.astro";
 
 import { ClientRouter } from "astro:transitions";
 
+import puppeteer from "puppeteer";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // import { fetchSpotifyToken, fetchRandomTrack } from "../scripts/spotify-api";
 
 // const token = await fetchSpotifyToken();
@@ -51,14 +58,11 @@ const fetchSpotifyData = async () => {
 };
 
 // Fetch data during SSR
-const { title, album, artist, explicit, id, coverURL } = await fetchSpotifyData();
-
+const { title, album, artist, explicit, id, coverURL } =
+    await fetchSpotifyData();
 interface Props {
     pageTitle: string;
 }
-
-const bannerPath = `/banner?title=${encodeURIComponent(title)}&album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}&explicit=${encodeURIComponent(explicit)}&coverURL=${encodeURIComponent(coverURL)}`;
-console.log(bannerPath);
 ---
 
 <!doctype html>
@@ -86,7 +90,7 @@ console.log(bannerPath);
             property="og:description"
             content={`${title} - ${album} by ${artist} :: get cool new songs everyday.`}
         />
-        <meta property="og:image" content={bannerPath} />
+        <meta property="og:image" content={coverURL} />
         <meta property="og:type" content="music.song" />
 
         <ClientRouter />

@@ -39,7 +39,7 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
                 class="overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_90%,transparent)]"
             >
                 <div
-                    class="flex flex-row items-center gap-2 pl-4 sm:mb-2 mb-0 mt-1 animate-scroll animation-delay-halfway w-[34rem] max-w-full min-w-0"
+                    class="flex flex-row items-center gap-2 pl-4 mb-1 mt-1 animate-scroll animation-delay-halfway w-[34rem]"
                 >
                     <h2
                         class="whitespace-nowrap m-0 sm:text-3xl leading-0 text-base"
@@ -51,13 +51,19 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
                 </div>
             </div>
 
-            <div class="flex sm:flex-col flex-row sm:gap-0 gap-2 animate-scroll animation-delay-halfway w-[34rem] max-w-full min-w-0">
-                <p class="pl-4 mb-0">
-                    <b>{Astro.props.album}</b>
-                </p>
-                <p class="sm:pl-4 pl-0">
-                    {Astro.props.artist}
-                </p>
+            <div
+                class="overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_90%,transparent)]"
+            >
+                <div
+                    class="flex flex-col gap-0 animate-scroll animation-delay-halfway w-[34rem]"
+                >
+                    <p class="pl-4 mb-0 sm:text-base text-sm">
+                        <b>{Astro.props.album}</b>
+                    </p>
+                    <p class="pl-4 sm:text-base text-sm">
+                        {Astro.props.artist}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -70,7 +76,11 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
             <button
                 class="w-full p-4 rounded-lg shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 sm:h-16 h-10 text-white flex flex-row items-center justify-center gap-3"
             >
-                <img src={spotifyIcon.src} class="sm:h-7 h-5" alt="Spotify icon" />
+                <img
+                    src={spotifyIcon.src}
+                    class="sm:h-7 h-5"
+                    alt="Spotify icon"
+                />
                 <p class="mb-0">listen on spotify</p>
             </button>
         </a>

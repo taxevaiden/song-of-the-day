@@ -38,10 +38,10 @@ export default {
 
             keyframes: {
                 scroll: {
-                    "0%": { transform: "translateX(-100%)" },
+                    "0%": { transform: "translateX(100%)" },
                     "25%": { transform: "translateX(0%)" },
                     "75%": { transform: "translateX(0%)" },
-                    "100%": { transform: "translateX(100%)" },
+                    "100%": { transform: "translateX(-100%)" },
                 },
             },
 
