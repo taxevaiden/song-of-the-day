@@ -6,12 +6,7 @@ import Background from "../components/Background.astro";
 
 import { ClientRouter } from "astro:transitions";
 
-import puppeteer from "puppeteer";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import spotifyLogo from "../assets/spotify_logo.svg";
 
 // import { fetchSpotifyToken, fetchRandomTrack } from "../scripts/spotify-api";
 
@@ -102,15 +97,13 @@ interface Props {
                 class="p-4 flex flex-col justify-center items-center w-screen min-h-screen relative"
             >
                 <h1
-                    class="uppercase sm:text-9xl text-7xl mb-16 w-screen px-8"
+                    class="uppercase text-5xl min-[380px]:text-7xl sm:text-9xl mb-8 w-screen px-8"
                     transition:name="pageTitle"
                 >
                     {Astro.props.pageTitle}
                 </h1>
 
                 <div class="p-4 w-[36rem] max-w-full min-w-0">
-                    <slot />
-
                     <Card
                         title={title}
                         album={album}
@@ -120,17 +113,32 @@ interface Props {
                         coverURL={coverURL}
                     />
 
-                    <p class="mt-8 mb-4" transition:name="navigate">
-                        <small>
-                            <a href="/">song of the day</a> &CenterDot; <a
-                                href="/about">why??</a
-                            > &CenterDot;
-                            <a href="/how-it-works">how it works</a><br />
-                            &copy; 2025 <a href="https://taxevaiden.pages.dev"
-                                >taxevaiden</a
-                            ></small
-                        >
-                    </p>
+                    <slot />
+
+                    <div
+                        class="flex flex-row justify-center items-center gap-2 mt-4"
+                        transition:name="card-acknowledgment "
+                    >
+                        <p class="mt-4 text-sm">music data provided by</p>
+                        <img
+                            src={spotifyLogo.src}
+                            class="h-6"
+                            alt="Spotify icon"
+                        />
+                    </div>
+
+                    <span
+                        class="mt-8 mb-4 text-sm text-secondary"
+                        transition:name="navigate"
+                    >
+                        <a href="/">song of the day</a>
+                        &CenterDot;
+                        <a href="/about">why??</a>
+                        &CenterDot;
+                        <a href="/how-it-works">how it works</a><br />
+                        &copy; 2025
+                        <a href="https://taxevaiden.pages.dev">taxevaiden</a>
+                    </span>
                 </div>
             </div>
         </main>

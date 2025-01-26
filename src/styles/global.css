@@ -9,7 +9,8 @@
     h4,
     h5,
     h6,
-    p {
+    p,
+    span {
         @apply font-sans text-text;
     }
 
@@ -23,10 +24,6 @@
 
     p {
         @apply text-base mb-4;
-    }
-
-    small {
-        @apply text-text-secondary;
     }
 
     a {

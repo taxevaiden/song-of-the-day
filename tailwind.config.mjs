@@ -12,7 +12,7 @@ export default {
                 border: "rgba(0,0,0,0.05)",
 
                 text: "rgb(255,255,255)",
-                "text-secondary": "rgb(200,200,200)",
+                secondary: "rgb(200,200,200)",
             },
 
             boxShadow: {
