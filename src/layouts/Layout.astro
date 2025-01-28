@@ -116,13 +116,13 @@ interface Props {
                     <slot />
 
                     <div
-                        class="flex flex-row justify-center items-center gap-2 mt-4"
+                        class="flex flex-col min-[320px]:flex-row justify-center items-center gap-2 mt-4"
                         transition:name="card-acknowledgment "
                     >
-                        <p class="mt-4 text-sm">music data provided by</p>
+                        <p class="mt-4 min-[320px]:mb-4 mb-0 text-sm">music data provided by</p>
                         <img
                             src={spotifyLogo.src}
-                            class="h-6"
+                            class="h-6 min-[320px]:mb-0 mb-4"
                             alt="Spotify icon"
                         />
                     </div>
