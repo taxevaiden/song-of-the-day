@@ -8,12 +8,12 @@ interface SpotifyTrack {
 	day: number;
 }
 
-function shuffleArray(array : Array<string>) {
-	let clone = structuredClone(array)
-    for (let i = clone.length - 1; i >= 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [clone[i], clone[j]] = [clone[j], clone[i]];
-    }
+function shuffleArray(array: Array<string>) {
+	let clone = structuredClone(array);
+	for (let i = clone.length - 1; i >= 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[clone[i], clone[j]] = [clone[j], clone[i]];
+	}
 	return clone;
 }
 
@@ -63,18 +63,17 @@ const getToday = (): { day: number } => {
 
 const getRandomSearchQuery = (): { searchQuery: string } => {
 	const searchQueries = [
-		'spellcasting artist',
 		'vocaloid',
-		'iyowa vocaloid',
+		'iyowa',
 		'sasakure.UK',
 		'DECO*27',
+		'cosMo@Bousou-P',
+		'ado',
+		'frank ocean',
 		'kendrick lamar',
-		'B1A4 kpop band',
-		'le sserafim kpop band',
 		'tyler, the creator song rap artist',
-		'newjeans kpop band',
-		'glass beach rock band',
-		'loossemble kpop band',
+		'linkin park',
+		'mf doom',
 	];
 
 	const shuffled = shuffleArray(searchQueries);
@@ -85,7 +84,7 @@ const getRandomSearchQuery = (): { searchQuery: string } => {
 
 const fetchRandomTrack = async (
 	token: string,
-	env: Env
+	env: Env,
 ): Promise<{
 	coverURL: string;
 	title: string;
@@ -159,7 +158,7 @@ const fetchRandomTrack = async (
 
 	// cache the new track data
 	await env.SPOTIFY_API_HANDLER_CACHE.put(cacheKey, JSON.stringify(trackFormatted), {
-		expirationTtl: 172800, // Expire after 2 days
+		expirationTtl: 2678400, // Expire after a month
 	});
 
 	await env.SPOTIFY_API_HANDLER_CACHE.put('latest-key', cacheKey);

@@ -15,11 +15,11 @@
     }
 
     h1 {
-        @apply font-bold text-6xl m-7;
+        @apply font-bold text-6xl;
     }
 
     h2 {
-        @apply font-bold text-4xl mt-4 mb-7;
+        @apply font-bold text-4xl;
     }
 
     p {

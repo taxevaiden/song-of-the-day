@@ -55,9 +55,6 @@ const fetchSpotifyData = async () => {
 // Fetch data during SSR
 const { title, album, artist, explicit, id, coverURL } =
     await fetchSpotifyData();
-interface Props {
-    pageTitle: string;
-}
 ---
 
 <!doctype html>
@@ -97,10 +94,9 @@ interface Props {
                 class="p-4 flex flex-col justify-center items-center w-screen min-h-screen relative"
             >
                 <h1
-                    class="uppercase text-5xl min-[380px]:text-7xl sm:text-9xl mb-8 w-screen px-8"
-                    transition:name="pageTitle"
+                    class="uppercase text-5xl min-[380px]:text-7xl mb-8 min-[380px]:w-96 min-[690px]:w-screen px-8"
                 >
-                    {Astro.props.pageTitle}
+                    SONG OF THE DAY
                 </h1>
 
                 <div class="p-4 w-[36rem] max-w-full min-w-0">
@@ -117,28 +113,16 @@ interface Props {
 
                     <div
                         class="flex flex-col min-[320px]:flex-row justify-center items-center gap-2 mt-4"
-                        transition:name="card-acknowledgment "
                     >
-                        <p class="mt-4 min-[320px]:mb-4 mb-0 text-sm">music data provided by</p>
+                        <p class="mt-4 min-[320px]:mb-4 mb-0 text-sm">
+                            music data provided by
+                        </p>
                         <img
                             src={spotifyLogo.src}
                             class="h-6 min-[320px]:mb-0 mb-4"
                             alt="Spotify icon"
                         />
                     </div>
-
-                    <span
-                        class="mt-8 mb-4 text-sm text-secondary"
-                        transition:name="navigate"
-                    >
-                        <a href="/">song of the day</a>
-                        &CenterDot;
-                        <a href="/about">why??</a>
-                        &CenterDot;
-                        <a href="/how-it-works">how it works</a><br />
-                        &copy; 2025
-                        <a href="https://taxevaiden.pages.dev">taxevaiden</a>
-                    </span>
                 </div>
             </div>
         </main>

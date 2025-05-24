@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "song-of-the-day",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,10 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.2.0",
-    "@astrojs/tailwind": "^5.1.5",
+    "@astrojs/cloudflare": "^12.5.3",
+    "@astrojs/tailwind": "^6.0.2",
     "@types/estree": "^1.0.6",
-    "astro": "^5.1.8",
+    "astro": "^5.8.0",
     "dotenv": "^16.4.7",
     "tailwindcss": "^3.4.16"
   }

@@ -70,7 +70,8 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
     <div class="px-4 pb-4 flex sm:flex-row flex-col sm:gap-4 gap-2">
         <a
             class="flex-1 no-underline duration-500"
-            href=`https://open.spotify.com/track/${Astro.props.id}`
+            id="spotify-link"
+            href={`https://open.spotify.com/track/${Astro.props.id}`}
         >
             <button
                 class="w-full p-4 rounded-lg shadow-outlinexl hover:shadow-outline2xl transition-shadow duration-500 sm:h-16 h-10 text-white flex flex-row items-center justify-center gap-3"
@@ -96,13 +97,16 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
 
 <script>
     const copyLinkElement = document.getElementById(
-        "copy-link"
+        "copy-link",
     ) as HTMLLinkElement;
     copyLinkElement.onclick = function () {
         const copyTextElement = document.getElementById(
-            "copy-text"
+            "copy-text",
         ) as HTMLParagraphElement;
-        navigator.clipboard.writeText(window.location.href);
+        const copyLink = document.getElementById(
+            "spotify-link",
+        ) as HTMLLinkElement;
+        navigator.clipboard.writeText(copyLink.href);
         copyTextElement.innerText = "link copied!";
     };
 </script>
