@@ -1,3 +1,24 @@
+interface SpotifyTokenResponse {
+	access_token: string;
+}
+
+interface SpotifySearchResponse {
+	tracks: {
+		items: SpotifyAPITrack[];
+	};
+}
+
+interface SpotifyAPITrack {
+	name: string;
+	explicit: boolean;
+	id: string;
+	album: {
+		name: string;
+		images: { url: string }[];
+	};
+	artists: { name: string }[];
+}
+
 interface SpotifyTrack {
 	coverURL: string;
 	title: string;
@@ -49,7 +70,7 @@ const fetchSpotifyToken = async (clientId: string, clientSecret: string): Promis
 		body: `grant_type=client_credentials${authString}`,
 	});
 
-	const data = await response.json();
+	const data = (await response.json()) as SpotifyTokenResponse;
 	console.log(data);
 	return data.access_token; // return the access token
 };
@@ -63,17 +84,42 @@ const getToday = (): { day: number } => {
 
 const getRandomSearchQuery = (): { searchQuery: string } => {
 	const searchQueries = [
-		'vocaloid',
-		'iyowa',
-		'sasakure.UK',
-		'DECO*27',
-		'cosMo@Bousou-P',
-		'ado',
+		'tyler the creator',
+		'brent faiyaz',
+		'a$ap rocky',
+		'daniel caesar',
 		'frank ocean',
+		'giveon',
 		'kendrick lamar',
-		'tyler, the creator song rap artist',
-		'linkin park',
+		'the weeknd',
+		'steve lacy',
+		'blood orange',
+		'sza',
+		'jorja smith',
+		'ari lennox',
+		'mahalia',
+		'omar apollo',
+		'snoh aalegra',
+		'serpentwithfeet',
+		'james blake',
+		'thundercat',
+		'j cole',
+		'schoolboy q',
+		'earl sweatshirt',
+		'joey bada$$',
+		'vince staples',
 		'mf doom',
+		'freddie gibbs',
+		'denzel curry',
+		'jpegmafia',
+		'billy woods',
+		'childish gambino',
+		'anderson paak',
+		'lucky daye',
+		'bryson tiller',
+		'partynextdoor',
+		'syd',
+		'lonr.',
 	];
 
 	const shuffled = shuffleArray(searchQueries);
@@ -134,7 +180,7 @@ const fetchRandomTrack = async (
 		throw new Error(`Spotify API Error: ${response.status} - ${errorText}`);
 	}
 
-	const data = await response.json();
+	const data = (await response.json()) as SpotifySearchResponse;
 
 	// validate the response and assign a track
 	if (!data.tracks || !data.tracks.items || data.tracks.items.length === 0) {
@@ -169,7 +215,7 @@ const fetchRandomTrack = async (
 
 // handling incoming requests
 export default {
-	async fetch(request, env: Env) {
+	async fetch(request: Request, env: Env) {
 		// Only support GET requests for simplicity
 		if (request.method === 'GET') {
 			try {
@@ -185,7 +231,7 @@ export default {
 					},
 				});
 			} catch (error) {
-				return new Response(`Error: ${error.message}`, { status: 500 });
+				return new Response(`Error: ${(error as Error).message}`, { status: 500 });
 			}
 		}
 
