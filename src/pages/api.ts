@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+import { env } from "cloudflare:workers";
+
 export const prerender = false;
 
 interface SpotifyTokenResponse {
@@ -174,7 +176,7 @@ const fetchRandomTrack = async (): Promise<SpotifyTrack> => {
   };
 };
 
-export const GET: APIRoute = async ({ env }) => {
+export const GET: APIRoute = async () => {
   const cache = env.SPOTIFY_API_HANDLER_CACHE as KVNamespace;
   const cacheKey = "spotify-track";
 

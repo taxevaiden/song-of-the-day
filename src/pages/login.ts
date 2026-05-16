@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+import { env } from "cloudflare:workers";
+
 export const prerender = false;
 import queryString from "query-string";
 
@@ -16,7 +18,7 @@ const generateRandomString = (length: number): string => {
   return str;
 };
 
-export const GET: APIRoute = async ({ request, redirect, env }) => {
+export const GET: APIRoute = async ({ request, redirect }) => {
   try {
     const scope = "user-top-read";
 
