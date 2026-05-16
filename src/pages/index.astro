@@ -27,15 +27,15 @@ let session = null;
 if (sessionId) {
     const raw = await env.SESSIONS.get(sessionId);
     if (raw) session = JSON.parse(raw);
-}
 
-if (session.expires_at < Date.now()) {
-    const refreshed = await refreshToken(env, session.refresh_token);
+    if (session.expires_at < Date.now()) {
+        const refreshed = await refreshToken(env, session.refresh_token);
 
-    session.access_token = refreshed.access_token;
-    session.expires_at = Date.now() + refreshed.expires_in * 1000;
+        session.access_token = refreshed.access_token;
+        session.expires_at = Date.now() + refreshed.expires_in * 1000;
 
-    await env.SESSIONS.put(sessionId, JSON.stringify(session));
+        await env.SESSIONS.put(sessionId, JSON.stringify(session));
+    }
 }
 
 // in-memory cache for Spotify data
@@ -80,23 +80,6 @@ const fetchSpotifyData = async () => {
         };
     }
 };
-
-const res = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
-    headers: {
-        Authorization: `Bearer ${session.access_token}`,
-    },
-});
-
-if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Spotify top artists error: ${res.status} - ${text}`);
-}
-
-const data = (await res.json()) as {
-    items: { name: string }[];
-};
-
-console.log(data.items.map((a) => a.name));
 
 // Fetch data during SSR
 const { title, album, artist, explicit, id, coverURL } =
