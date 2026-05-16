@@ -3,7 +3,7 @@ interface Props {
     title: string;
     album: string;
     artist: string;
-    explciit: boolean;
+    explicit: boolean;
     id: string;
     coverURL: string;
 }
@@ -46,7 +46,7 @@ import ExplicitIcon from "../components/icons/ExplicitIcon.astro";
                         {Astro.props.title}
                     </span>
 
-                    {Astro.props.explciit ? <ExplicitIcon /> : null}
+                    {Astro.props.explicit ? <ExplicitIcon /> : null}
                 </div>
             </div>
 

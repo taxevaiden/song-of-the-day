@@ -1,6 +1,61 @@
 ---
 import Layout from "../layouts/Layout.astro";
 export const prerender = false; // Disable static prerendering
+
+// import { fetchSpotifyToken, fetchRandomTrack } from "../scripts/spotify-api";
+
+// const token = await fetchSpotifyToken();
+// const randomSong = await fetchRandomTrack(token);
+
+// in-memory cache for Spotify data
+const cache: { data: any; expiry: number | null } = {
+    data: null,
+    expiry: null,
+};
+
+// fetch Spotify data with caching
+const fetchSpotifyData = async () => {
+    const apiURL = new URL("/api", Astro.url.origin).toString();
+
+    // check if the cache is valid
+    const now = Date.now();
+    if (cache.data && cache.expiry && now < cache.expiry) {
+        return cache.data;
+    }
+
+    try {
+        const response = await fetch(apiURL, { cache: "no-store" });
+        if (!response.ok) throw new Error("Failed to fetch Spotify data");
+
+        const data = await response.json();
+
+        // cahce the data for 1 hour (3600000 ms)
+        cache.data = data;
+        cache.expiry = now + 3600000;
+
+        return data;
+    } catch {
+        return {
+            title: "default title",
+            album: "default album",
+            artist: "default artist",
+            explicit: false,
+            id: "4cOdK2wGLETKBW3PvgPWqT",
+            coverURL: "/fallback.png",
+        };
+    }
+};
+
+// Fetch data during SSR
+const { title, album, artist, explicit, id, coverURL } =
+    await fetchSpotifyData();
 ---
 
-<Layout />
+<Layout
+    title=`${title}`
+    album=`${album}`
+    artist=`${artist}`
+    explicit={explicit}
+    id=`${id}`
+    coverURL=`${coverURL}`
+/>
