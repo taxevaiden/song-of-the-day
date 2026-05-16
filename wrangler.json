@@ -4,7 +4,7 @@
   "kv_namespaces": [
     {
       "binding": "SPOTIFY_API_HANDLER_CACHE",
-      "id": "c4f131a282ba4df984805bf001af2797",
-    },
-  ],
+      "id": "c4f131a282ba4df984805bf001af2797"
+    }
+  ]
 }
