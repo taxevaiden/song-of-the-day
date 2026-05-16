@@ -11,5 +11,10 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://sotd.pages.dev",
-  adapter: cloudflare(),
+  output: "server",
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
 });
