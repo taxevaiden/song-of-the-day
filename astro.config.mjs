@@ -15,7 +15,7 @@ export default defineConfig({
       cors: true,
     },
   },
-  site: "https://sotd.taxevaiden.workers.dev",
+  site: "https://sotd.tacks.workers.dev",
   output: "server",
   adapter: cloudflare({
     platformProxy: {
