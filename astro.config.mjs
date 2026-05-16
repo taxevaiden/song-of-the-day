@@ -10,7 +10,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: "https://sotd.pages.dev",
+  site: "https://sotd.taxevaiden.workers.dev",
   output: "server",
   adapter: cloudflare({
     platformProxy: {

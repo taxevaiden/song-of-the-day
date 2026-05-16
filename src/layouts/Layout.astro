@@ -21,7 +21,7 @@ const cache: { data: any; expiry: number | null } = {
 
 // fetch Spotify data with caching
 const fetchSpotifyData = async () => {
-    const apiURL = new URL("/api", Astro.url).toString();
+    const apiURL = new URL("/api", Astro.url.origin).toString();
 
     // check if the cache is valid
     const now = Date.now();
