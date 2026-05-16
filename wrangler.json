@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "sotd",
+  "name": "song-of-the-day",
   "compatibility_date": "2026-05-16",
   "compatibility_flags": ["nodejs_compat"],
 
