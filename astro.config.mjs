@@ -9,6 +9,11 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      host: "0.0.0.0",
+      port: 4321,
+      cors: true,
+    },
   },
   site: "https://sotd.taxevaiden.workers.dev",
   output: "server",

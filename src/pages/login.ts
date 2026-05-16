@@ -2,7 +2,6 @@ import type { APIRoute } from "astro";
 
 import { env } from "cloudflare:workers";
 
-export const prerender = false;
 import queryString from "query-string";
 
 const generateRandomString = (length: number): string => {
@@ -21,8 +20,6 @@ const generateRandomString = (length: number): string => {
 export const GET: APIRoute = async ({ request, redirect }) => {
   try {
     const scope = "user-top-read";
-
-    const reqUrl = new URL(request.url);
 
     const redirect_uri = env.SPOTIFY_REDIRECT_URI;
 

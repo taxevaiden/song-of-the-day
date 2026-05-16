@@ -1,6 +1,123 @@
 ---
 import Layout from "../layouts/Layout.astro";
-export const prerender = false; // Disable static prerendering
+import { env } from "cloudflare:workers";
+
+const sessionId = Astro.cookies.get("session_id")?.value;
+
+async function refreshToken(env: Cloudflare.Env, refresh_token: string) {
+    const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Basic ${btoa(
+                `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
+            )}`,
+        },
+        body: new URLSearchParams({
+            grant_type: "refresh_token",
+            refresh_token,
+        }),
+    });
+
+    return res.json();
+}
+
+let session = null;
+
+if (sessionId) {
+    const raw = await env.SESSIONS.get(sessionId);
+    if (raw) session = JSON.parse(raw);
+}
+
+if (session.expires_at < Date.now()) {
+    const refreshed = await refreshToken(env, session.refresh_token);
+
+    session.access_token = refreshed.access_token;
+    session.expires_at = Date.now() + refreshed.expires_in * 1000;
+
+    await env.SESSIONS.put(sessionId, JSON.stringify(session));
+}
+
+// in-memory cache for Spotify data
+const cache: { data: any; expiry: number | null } = {
+    data: null,
+    expiry: null,
+};
+
+// fetch Spotify data with caching
+const fetchSpotifyData = async () => {
+    const apiUrl = new URL("/api", Astro.url.origin);
+
+    if (sessionId) {
+        apiUrl.searchParams.set("session", sessionId);
+    }
+
+    // check if the cache is valid
+    const now = Date.now();
+    if (cache.data && cache.expiry && now < cache.expiry) {
+        return cache.data;
+    }
+
+    try {
+        const response = await fetch(apiUrl.toString(), { cache: "no-store" });
+        if (!response.ok) throw new Error("Failed to fetch Spotify data");
+
+        const data = await response.json();
+
+        // cahce the data for 1 hour (3600000 ms)
+        cache.data = data;
+        cache.expiry = now + 3600000;
+
+        return data;
+    } catch (error) {
+        return {
+            title: "uh oh!",
+            album: "an error has occured!",
+            artist: (error as Error).message,
+            explicit: false,
+            id: "4cOdK2wGLETKBW3PvgPWqT",
+            coverURL: "/fallback.png",
+        };
+    }
+};
+
+const res = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
+    headers: {
+        Authorization: `Bearer ${session.access_token}`,
+    },
+});
+
+if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Spotify top artists error: ${res.status} - ${text}`);
+}
+
+const data = (await res.json()) as {
+    items: { name: string }[];
+};
+
+console.log(data.items.map((a) => a.name));
+
+// Fetch data during SSR
+const { title, album, artist, explicit, id, coverURL } =
+    await fetchSpotifyData();
 ---
 
-<Layout />
+<Layout
+    title={title}
+    album={album}
+    artist={artist}
+    explicit={explicit}
+    id={id}
+    coverURL={coverURL}
+>
+    {
+        session ? (
+            <p>logged in!! :)</p>
+        ) : (
+            <a class="text-tprimary" href="/login">
+                login with Spotify
+            </a>
+        )
+    }
+</Layout>

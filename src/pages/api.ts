@@ -2,8 +2,6 @@ import type { APIRoute } from "astro";
 
 import { env } from "cloudflare:workers";
 
-export const prerender = false;
-
 interface SpotifyTokenResponse {
   access_token: string;
 }
@@ -84,61 +82,110 @@ const getToday = (): { day: number } => {
   return { day };
 };
 
-const getRandomSearchQuery = (): {
-  searchQuery: string;
-} => {
-  const searchQueries = [
-    "tyler the creator",
-    "brent faiyaz",
-    "a$ap rocky",
-    "daniel caesar",
-    "frank ocean",
-    "giveon",
-    "kendrick lamar",
-    "the weeknd",
-    "steve lacy",
-    "blood orange",
-    "sza",
-    "jorja smith",
-    "ari lennox",
-    "mahalia",
-    "omar apollo",
-    "snoh aalegra",
-    "serpentwithfeet",
-    "james blake",
-    "thundercat",
-    "j cole",
-    "schoolboy q",
-    "earl sweatshirt",
-    "joey bada$$",
-    "vince staples",
-    "mf doom",
-    "freddie gibbs",
-    "denzel curry",
-    "jpegmafia",
-    "billy woods",
-    "childish gambino",
-    "anderson paak",
-    "lucky daye",
-    "bryson tiller",
-    "partynextdoor",
-    "syd",
-    "lonr.",
-  ];
+const DEFAULT_SEARCH_QUERIES = [
+  "tyler the creator",
+  "brent faiyaz",
+  "a$ap rocky",
+  "daniel caesar",
+  "frank ocean",
+  "giveon",
+  "kendrick lamar",
+  "the weeknd",
+  "steve lacy",
+  "blood orange",
+  "sza",
+  "jorja smith",
+  "ari lennox",
+  "mahalia",
+  "omar apollo",
+  "snoh aalegra",
+  "serpentwithfeet",
+  "james blake",
+  "thundercat",
+  "j cole",
+  "schoolboy q",
+  "earl sweatshirt",
+  "joey bada$$",
+  "vince staples",
+  "mf doom",
+  "freddie gibbs",
+  "denzel curry",
+  "jpegmafia",
+  "billy woods",
+  "childish gambino",
+  "anderson paak",
+  "lucky daye",
+  "bryson tiller",
+  "partynextdoor",
+  "syd",
+  "lonr.",
+];
 
-  const shuffled = shuffleArray(searchQueries);
+export const getRandomSearchQuery = (
+  searchQueries: string[] | null,
+): { searchQuery: string } => {
+  if (searchQueries != null) {
+    console.log("searchqueries param present, assuming logged in:");
+    console.log(searchQueries);
+  } else {
+    console.log("searchqueries param not present, assuming logged out");
+  }
+
+  const list = searchQueries ?? DEFAULT_SEARCH_QUERIES;
+
+  const shuffled = shuffleArray(list);
 
   return {
-    searchQuery: shuffled[getToday().day % searchQueries.length],
+    searchQuery: shuffled[getToday().day % list.length],
   };
 };
 
-const fetchRandomTrack = async (): Promise<SpotifyTrack> => {
+const fetchTopArtists = async (accessToken: string) => {
+  const res = await fetch(
+    "https://api.spotify.com/v1/me/top/artists?limit=50",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Spotify top artists error: ${res.status} - ${text}`);
+  }
+
+  const data = (await res.json()) as {
+    items: { name: string }[];
+  };
+
+  return data.items.map((a) => a.name);
+};
+
+const fetchRandomTrack = async (
+  sessionId: string | null,
+): Promise<SpotifyTrack> => {
   const token = await fetchSpotifyToken();
 
   const day = getToday().day;
 
-  const randomQuery = getRandomSearchQuery();
+  let randomQuery: { searchQuery: string };
+
+  if (sessionId) {
+    const raw = await env.SESSIONS.get(sessionId);
+
+    if (raw) {
+      const session = JSON.parse(raw);
+
+      const topArtists = await fetchTopArtists(session.access_token);
+
+      randomQuery = getRandomSearchQuery(topArtists);
+    } else {
+      randomQuery = getRandomSearchQuery(null);
+    }
+  } else {
+    randomQuery = getRandomSearchQuery(null);
+  }
 
   const query = encodeURIComponent(randomQuery.searchQuery);
 
@@ -176,9 +223,15 @@ const fetchRandomTrack = async (): Promise<SpotifyTrack> => {
   };
 };
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
+  var req_url = new URL(request.url);
+  var queryParams = req_url.searchParams;
+  var sessionId = queryParams.get("session");
+  var day = getToday();
   const cache = env.SPOTIFY_API_HANDLER_CACHE as KVNamespace;
-  const cacheKey = "spotify-track";
+  const cacheKey = sessionId
+    ? `spotify-track:${sessionId}:${day}`
+    : `spotify-track:guest:${day}`;
 
   const cached = await cache.get(cacheKey, { type: "json" });
 
@@ -191,7 +244,7 @@ export const GET: APIRoute = async () => {
     });
   }
 
-  const trackData = await fetchRandomTrack();
+  const trackData = await fetchRandomTrack(sessionId);
 
   await cache.put(cacheKey, JSON.stringify(trackData), {
     expirationTtl: 3600,

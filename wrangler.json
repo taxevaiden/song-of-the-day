@@ -8,6 +8,10 @@
   },
   "kv_namespaces": [
     {
+      "binding": "SESSIONS",
+      "id": "a6507f24127449eabe5ad01bb308d30b"
+    },
+    {
       "binding": "SPOTIFY_API_HANDLER_CACHE",
       "id": "c4f131a282ba4df984805bf001af2797"
     }
