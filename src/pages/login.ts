@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro";
 
 export const prerender = false;
-
 import queryString from "query-string";
 
 import { env } from "cloudflare:workers";

@@ -50,8 +50,8 @@ function shuffleArray(array: string[]) {
 }
 
 const fetchSpotifyToken = async (): Promise<string> => {
-  const clientId = import.meta.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET;
+  const clientId = env.SPOTIFY_CLIENT_ID;
+  const clientSecret = env.SPOTIFY_CLIENT_SECRET;
 
   const authString = `&client_id=${clientId}&client_secret=${clientSecret}`;
 
@@ -177,7 +177,7 @@ const fetchRandomTrack = async (): Promise<SpotifyTrack> => {
 };
 
 export const GET: APIRoute = async () => {
-  const cache = env.SPOTIFY_API_HANDLER_CACHE;
+  const cache = env.SPOTIFY_API_HANDLER_CACHE as KVNamespace;
   const cacheKey = "spotify-track";
 
   const cached = await cache.get(cacheKey, { type: "json" });
