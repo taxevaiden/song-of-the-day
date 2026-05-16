@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 
+export const prerender = false;
+
 import { env } from "cloudflare:workers";
 
 interface SpotifyTokenResponse {
