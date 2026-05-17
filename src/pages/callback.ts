@@ -42,13 +42,11 @@ export const GET: APIRoute = async ({ request, redirect }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${btoa(
-          `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`,
-        )}`,
+        Authorization: `Basic ${authHeader}`,
       },
       body: new URLSearchParams({
         code,
-        redirect_uri: env.SPOTIFY_REDIRECT_URI,
+        redirect_uri: redirect_uri,
         grant_type: "authorization_code",
       }),
     });
